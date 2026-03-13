@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Tools</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a90d9' stroke-width='2'><path d='M3 3v18h18'/><path d='M18 17V9'/><path d='M13 17V5'/><path d='M8 17v-3'/></svg>">
+    <link rel="stylesheet" href="/static/style.css?v=9">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+    <style>
+        /* SVG Icon Styles */
+        .icon {
+            width: 1.2em;
+            height: 1.2em;
+            display: inline-block;
+            vertical-align: middle;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+        .icon-sm { width: 1em; height: 1em; }
+        .icon-lg { width: 1.5em; height: 1.5em; }
+        .tab-icon .icon { stroke: currentColor; }
+        .input-icon .icon { stroke: currentColor; }
+        .button .icon { stroke: currentColor; margin-right: 0.3em; }
+        h2 .icon { margin-right: 0.3em; }
+        h3 .icon { margin-right: 0.3em; }
+        label .icon { margin-right: 0.3em; }
+        
+        /* Log Tabs */
+        .log-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #3a3a4a;
+            padding-bottom: 4px;
+        }
+        .log-tab {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .log-tab:hover {
+            color: #cdd6f4;
+            background: #2a2a3a;
+        }
+        .log-tab.active {
+            color: #89b4fa;
+            background: #2a2a3a;
+            border-bottom: 2px solid #89b4fa;
+        }
+        .log-content {
+            display: none;
+        }
+        .log-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="generate-signals">
+                <span class="tab-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
+                <span class="tab-label">Generate Signals</span>
+            </button>
+            <button class="tab" data-tab="pnl-calculator">
+                <span class="tab-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+                <span class="tab-label">PnL Calculator</span>
+            </button>
+            <button class="tab" data-tab="printlvl">
+                <span class="tab-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+                <span class="tab-label">PrintLvl</span>
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="content">
+            <!-- Generate Signals -->
+            <div class="tab-content active" id="generate-signals">
+                <h2><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg> Generate Signals</h2>
+                <p class="description">Генерация CME сигналов с автоматическим применением конфигов</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Начальная дата:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="gs-start-date" class="input date-input" placeholder="01.11.2025" data-save="true">
+                            <span class="input-icon calendar-icon" data-for="gs-start-date"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Конечная дата:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="gs-end-date" class="input date-input" placeholder="31.12.2025" data-save="true">
+                            <span class="input-icon calendar-icon" data-for="gs-end-date"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Этапы выполнения:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="gs-features" checked data-save="true">
+                            Запуск FeaturesCalculator
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" id="gs-rscript" checked data-save="true">
+                            Запуск R скрипта
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" id="gs-processing" checked data-save="true">
+                            Обработка файлов и раскидывание по папкам
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" id="gs-cleanup" checked data-save="true">
+                            Удаление temp папок
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="button primary" id="gs-run"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Запустить генерацию</button>
+                </div>
+
+                <div class="log-container">
+                    <div class="log-tabs">
+                        <button class="log-tab active" data-log-tab="main">
+                            <span class="tab-icon">📋</span>
+                            <span class="tab-label">Основной лог</span>
+                        </button>
+                        <button class="log-tab" data-log-tab="fc">
+                            <span class="tab-icon">🔧</span>
+                            <span class="tab-label">Полный лог вычислений</span>
+                        </button>
+                    </div>
+                    <div class="log-content active" id="gs-log-main"></div>
+                    <div class="log-content" id="gs-log-fc"></div>
+                </div>
+            </div>
+
+            <!-- PnL Calculator -->
+            <div class="tab-content" id="pnl-calculator">
+                <h2><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> PnL Calculator</h2>
+                <p class="description">Расчёт PnL из CSV файлов</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Начальная дата:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="pnl-start-date" class="input date-input" placeholder="01.11.2025" data-save="true">
+                            <span class="input-icon calendar-icon" data-for="pnl-start-date"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Конечная дата:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="pnl-end-date" class="input date-input" placeholder="31.12.2025" data-save="true">
+                            <span class="input-icon calendar-icon" data-for="pnl-end-date"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="button primary" id="pnl-calculate"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 10h8"/><path d="M8 14h4"/></svg> Рассчитать PnL</button>
+                </div>
+
+                <div class="table-container">
+                    <h3><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> Результаты</h3>
+                    <table class="table" id="pnl-table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Комбо</th>
+                                <th>PnL типа 1</th>
+                                <th>PnL типа 2</th>
+                                <th>PnL типа 3</th>
+                                <th>PnL типа 4</th>
+                                <th>PnL типа 5</th>
+                                <th>PnL типа 6</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pnl-tbody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="log-container">
+                    <h3><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Подробный лог</h3>
+                    <div class="log" id="pnl-log"></div>
+                </div>
+            </div>
+
+            <!-- PrintLvl -->
+            <div class="tab-content" id="printlvl">
+                <h2><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> PrintLvl</h2>
+                <p class="description">Симулятор и генератор графиков Level 2 order book</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg> Ticker:</label>
+                        <input type="text" id="pl-ticker" class="input" placeholder="MGNT_TQBR" data-save="true">
+                    </div>
+
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Дата:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="pl-date" class="input date-input" placeholder="11.12.2025" data-save="true">
+                            <span class="input-icon calendar-icon" data-for="pl-date"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Время:</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="pl-time" class="input time-input" placeholder="22:59:51.000" data-save="true">
+                            <span class="input-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Start Offset (ms):</label>
+                        <input type="number" id="pl-start-offset" class="input number-input" value="0" min="0" data-save="true">
+                    </div>
+
+                    <div class="form-group">
+                        <label><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> End Offset (ms):</label>
+                        <input type="number" id="pl-end-offset" class="input number-input" value="1000" min="0" data-save="true">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="button primary" id="pl-run"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Запустить pipeline</button>
+                    <button class="button secondary" id="pl-save-pdf" disabled><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Сохранить PDF</button>
+                </div>
+
+                <div class="log-container">
+                    <h3><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Лог</h3>
+                    <div class="log" id="pl-log"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+ticker = MGNT_TQBR
+date = 12.03.2026
+time = 22:59:51.000
+start_time_offset = 0
+end_time_offset = 1000

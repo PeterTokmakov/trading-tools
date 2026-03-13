@@ -1,0 +1,8 @@
+{
+    "SSH_USERNAME": "ptokmakov",
+    "SSH_KEY_PATH": "C:\\Users\\user\\.ssh\\id_ed25519",
+    "REMOTE_HOST": "192.168.5.11",
+    "SIGNAL_FOLDER": "/data/Research/Datasets/CMESignals/",
+    "RSCRIPT_PATH": "/data/Research/RScripts/MomentFixCME/process_signals.R"
+}
+

@@ -1,0 +1,7 @@
+{
+    "SSH_USERNAME": "digger",
+    "SSH_KEY_PATH": "C:\\Users\\user\\.ssh\\id_ed25519",
+    "REMOTE_HOST": "10.0.1.13",
+    "REMOTE_FILTER_SCRIPT_PATH": "/home/digger/ptokmakov/PythonScripts/server_log_filter.py",
+    "REMOTE_LOG_DIR": "/data/Research/Datasets/CmeQuincyLog"
+}

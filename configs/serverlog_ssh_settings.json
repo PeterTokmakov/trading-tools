@@ -1,0 +1,7 @@
+{
+    "SSH_USERNAME": "ptokmakov",
+    "SSH_KEY_PATH": "C:\\Users\\user\\.ssh\\id_ed25519",
+    "REMOTE_HOST": "192.168.5.11",
+    "REMOTE_FILTER_SCRIPT_PATH": "/home/ptokmakov/PythonScripts/server_log_filter.py"
+}
+
